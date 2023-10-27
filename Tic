@@ -1,0 +1,117 @@
+Here's a simple implementation of Tic-Tac-Toe in C. This code allows two players to take turns to play the game on the command line.
+
+```c
+#include <stdio.h>
+
+char board[3][3];
+int currentPlayer = 1;
+
+void initializeBoard() {
+    int i, j;
+    for (i = 0; i < 3; i++) {
+        for (j = 0; j < 3; j++) {
+            board[i][j] = ' ';
+        }
+    }
+}
+
+void displayBoard() {
+    int i, j;
+    printf("  1   2   3\n");
+    for (i = 0; i < 3; i++) {
+        printf("%d", i + 1);
+        for (j = 0; j < 3; j++) {
+            printf(" %c ", board[i][j]);
+            if (j < 2) {
+                printf("|");
+            }
+        }
+        printf("\n");
+        if (i < 2) {
+            printf("  ---+---+---\n");
+        }
+    }
+    printf("\n");
+}
+
+int isMoveValid(int row, int col) {
+    if (row >= 0 && row < 3 && col >= 0 && col < 3 && board[row][col] == ' ') {
+        return 1;
+    }
+    return 0;
+}
+
+int checkWin() {
+    int i;
+    for (i = 0; i < 3; i++) {
+        if (board[i][0] == board[i][1] && board[i][1] == board[i][2] && board[i][0] != ' ') {
+            return 1;
+        }
+        if (board[0][i] == board[1][i] && board[1][i] == board[2][i] && board[0][i] != ' ') {
+            return 1;
+        }
+    }
+    if (board[0][0] == board[1][1] && board[1][1] == board[2][2] && board[0][0] != ' ') {
+        return 1;
+    }
+    if (board[0][2] == board[1][1] && board[1][1] == board[2][0] && board[0][2] != ' ') {
+        return 1;
+    }
+    return 0;
+}
+
+int isBoardFull() {
+    int i, j;
+    for (i = 0; i < 3; i++) {
+        for (j = 0; j < 3; j++) {
+            if (board[i][j] == ' ') {
+                return 0;
+            }
+        }
+    }
+    return 1;
+}
+
+int main() {
+    int row, col;
+    initializeBoard();
+
+    while (1) {
+        displayBoard();
+
+        if (isBoardFull()) {
+            printf("It's a draw!\n");
+            break;
+        }
+
+        printf("Player %d's turn\n", currentPlayer);
+        printf("Enter row (1, 2, 3) and column (1, 2, 3): ");
+        scanf("%d %d", &row, &col);
+
+        row--; // Adjust to zero-based index
+        col--;
+
+        if (isMoveValid(row, col)) {
+            if (currentPlayer == 1) {
+                board[row][col] = 'X';
+                currentPlayer = 2;
+            } else {
+                board[row][col] = 'O';
+                currentPlayer = 1;
+            }
+
+            if (checkWin()) {
+                displayBoard();
+                printf("Player %d wins!\n", currentPlayer == 1 ? 2 : 1);
+                break;
+            }
+        } else {
+            printf("Invalid move. Try again.\n");
+        }
+    }
+
+    return 0;
+}
+```
+
+This code initializes the Tic-Tac-Toe board, displays it, allows two players to take turns, and checks for a win or a draw. Players input their moves by specifying the row and column coordinates. The game continues until a player wins or it's a draw.
